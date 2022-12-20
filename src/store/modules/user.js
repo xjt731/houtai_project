@@ -28,20 +28,27 @@ const mutations = {
 }
 
 const actions = {
-  // user login
-  login({ commit }, userInfo) {
-    const { username, password } = userInfo
-    return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
-        const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
-    })
+  // 登录的action,唯一目的获取用户token
+  async login({ commit}, userInfo) {
+    //解构用户的名字与密码
+    const { username, password } = userInfo;
+    //携带用户名与密码发请求判断能否登录
+    let result = await login({ username: username.trim(), password: password });
+    console.log(result);
+    
+    //登录成功
+    if (result.code == 20000) {
+      //vuex存储token
+      commit('SET_TOKEN', result.data.token);
+      //持久化存储token
+      setToken(result.data.token)
+      return 'ok'
+    } else {
+      //登录失败
+      return Promise.reject();
+    }
   },
+
 
   // get user info
   getInfo({ commit, state }) {

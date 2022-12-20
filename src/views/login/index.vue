@@ -1,11 +1,16 @@
 <template>
+  <!-- 登录页的根标签 -->
   <div class="login-container">
+    <!-- el-form:element-ui提供组件 
+ 	      el-form:务必要与el-form-item使用
+ 	      :model,代表表单元素收集的数据收集到哪里
+ 	      :rules,表单验证规则 -->
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
-
+      <!-- 标题 -->
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">登陆</h3>
       </div>
-
+      <!-- 用户名 -->
       <el-form-item prop="username">
         <span class="svg-container">
           <svg-icon icon-class="user" />
@@ -20,7 +25,7 @@
           auto-complete="on"
         />
       </el-form-item>
-
+      <!-- 密码区域 -->
       <el-form-item prop="password">
         <span class="svg-container">
           <svg-icon icon-class="password" />
@@ -41,7 +46,7 @@
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
 
       <div class="tips">
         <span style="margin-right:20px;">username: admin</span>
@@ -57,6 +62,7 @@ import { validUsername } from '@/utils/validate'
 
 export default {
   name: 'Login',
+  //自定义校验规则
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
@@ -105,9 +111,13 @@ export default {
         this.$refs.password.focus()
       })
     },
+    /* 登录按钮的业务 */
     handleLogin() {
+      /* 保证全部的表单元素都复合验证规则在发请求 */
       this.$refs.loginForm.validate(valid => {
+        //成功
         if (valid) {
+          /* 按钮的loading效果开始转动 */
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm).then(() => {
             this.$router.push({ path: this.redirect || '/' })
@@ -180,7 +190,8 @@ $light_gray:#eee;
 .login-container {
   min-height: 100%;
   width: 100%;
-  background-color: $bg;
+  background:url(~@/assets/1.png);
+  background-size: 100% 100%;
   overflow: hidden;
 
   .login-form {
